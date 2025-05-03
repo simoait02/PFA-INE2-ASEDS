@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: userManagement-microservice
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5435/users
+    username: postgres
+    password: hamza
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

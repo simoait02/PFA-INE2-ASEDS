@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: userAuth-microservice
+user:
+  management:
+    api:
+      base-url: http://localhost:8080/user-management/auth/
+server:
+  port: 8090
+jwt:
+  secret: ayFyjaxTLdllxt8GvjrBBwyYfyrayv9dclPJHK101kb9RIfrs2NdGi2WCPvV+Ok996aX8C/q8q8+X2KaHTkQtw==
