@@ -23,36 +23,36 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration:3600000}") // Default to 1 hour if not specified
+    @Value("${jwt.expiration:3600000}")
     private long jwtExpiration;
 
-    @Value("${jwt.refresh-token.expiration:86400000}") // Default to 24 hours
+    @Value("${jwt.refresh-token.expiration:86400000}")
     private long refreshExpiration;
 
     public String generateToken(AbstractUser user) {
-        return generateToken(new HashMap<>(), user);
-    }
-
-    public String generateToken(Map<String, Object> extraClaims, AbstractUser user) {
-        return buildToken(extraClaims, user, jwtExpiration);
+        return buildToken(user, jwtExpiration);
     }
 
     public String generateRefreshToken(AbstractUser user) {
-        return buildToken(new HashMap<>(), user, refreshExpiration);
+        return buildToken(user, refreshExpiration);
     }
 
-    private String buildToken(Map<String, Object> extraClaims, AbstractUser user, long expiration) {
+    private String buildToken( AbstractUser user, long expiration) {
         try {
             Date now = new Date();
             Date expiryDate = new Date(now.getTime() + expiration);
 
-            Map<String, Object> claims = new HashMap<>(extraClaims);
+            Map<String, Object> claims = new HashMap<>();
             claims.put("id", user.getId());
             claims.put("role", user.getRole().name());
+            claims.put("username", user.getUsername());
+            claims.put("email", user.getEmail());
+            claims.put("phone", user.getPhone());
+            claims.put("birthDate", user.getBirthDate());
+            claims.put("profilePictureUrl",user.getProfilePictureUrl());
 
             return Jwts.builder()
                     .setClaims(claims)
-                    .setSubject(user.getUsername())
                     .setIssuedAt(now)
                     .setExpiration(expiryDate)
                     .signWith(getSignKey(), SignatureAlgorithm.HS512)

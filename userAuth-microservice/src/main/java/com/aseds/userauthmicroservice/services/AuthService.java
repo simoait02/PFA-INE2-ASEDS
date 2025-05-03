@@ -1,9 +1,14 @@
 package com.aseds.userauthmicroservice.services;
 
 import com.aseds.userauthmicroservice.api.UserManagementClient;
+import com.aseds.userauthmicroservice.model.LoginRequest;
 import com.aseds.userauthmicroservice.model.RegisterRequest;
 import com.aseds.userauthmicroservice.model.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -14,11 +19,15 @@ import org.springframework.web.client.RestClientException;
 public class AuthService implements UserDetailsManager {
     private final UserManagementClient userManagementClient;
     private final UserDetailService userDetailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Autowired
-    public AuthService(UserManagementClient userManagementClient, UserDetailService userDetailService) {
+    public AuthService(UserManagementClient userManagementClient, UserDetailService userDetailService, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userManagementClient = userManagementClient;
         this.userDetailService = userDetailService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -59,5 +68,29 @@ public class AuthService implements UserDetailsManager {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userDetailService.loadUserByUsername(username);
+    }
+
+    public String login(LoginRequest loginRequest) {
+        if (loginRequest.getIdentifier() == null || loginRequest.getIdentifier().isBlank()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
+
+        if (loginRequest.getPassword() == null || loginRequest.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+        try {
+            Authentication authentication = this.authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getIdentifier(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            UserDetail userDetails = (UserDetail) authentication.getPrincipal();
+            return this.jwtService.generateToken(userDetails.user());
+
+        } catch (AuthenticationException e) {
+            throw new org.springframework.security.authentication.BadCredentialsException("Invalid credentials");
+        }
     }
 }

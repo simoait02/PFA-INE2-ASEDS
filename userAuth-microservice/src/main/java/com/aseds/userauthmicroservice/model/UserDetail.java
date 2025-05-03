@@ -6,16 +6,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class UserDetail implements UserDetails {
-    private final AbstractUser user;
-
-    public UserDetail(AbstractUser user) {
-        this.user = user;
-    }
+public record UserDetail(AbstractUser user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(()->user.getRole().name());
+        return List.of(() -> user.getRole().name());
     }
 
     @Override
@@ -27,14 +22,29 @@ public class UserDetail implements UserDetails {
     public String getUsername() {
         return user.getUsername();
     }
+
     public String getEmail() {
         return user.getEmail();
     }
-    public String getPhone(){
+
+    public String getPhone() {
         return user.getPhone();
     }
 
     public Date getBirthDate() {
         return user.getBirthDate();
+    }
+
+    public Long getId() {
+        return user.getId();
+    }
+
+    public String getProfilePictureUrl() {
+        return user.getProfilePictureUrl();
+    }
+
+    @Override
+    public AbstractUser user() {
+        return this.user;
     }
 }

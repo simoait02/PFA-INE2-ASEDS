@@ -1,6 +1,7 @@
 package com.aseds.userauthmicroservice.controller;
 
 import com.aseds.userauthmicroservice.model.AbstractUser;
+import com.aseds.userauthmicroservice.model.LoginRequest;
 import com.aseds.userauthmicroservice.model.RegisterRequest;
 import com.aseds.userauthmicroservice.model.UserDetail;
 import com.aseds.userauthmicroservice.services.AuthService;
@@ -30,6 +31,15 @@ public class AuthController {
             UserDetail newUser=new UserDetail(user);
             authService.createUser(newUser);
             return ResponseEntity.ok("User registered successfully");
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
+        try {
+            String token=authService.login(loginRequest);
+            return ResponseEntity.ok(token);
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

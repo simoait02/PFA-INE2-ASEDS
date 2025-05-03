@@ -21,4 +21,5 @@ public class UserDetailService implements UserDetailsService {
         return userManagementClient.getUserByIdentifier(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + username));
     }
+
 }
