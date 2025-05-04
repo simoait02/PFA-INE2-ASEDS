@@ -4,9 +4,9 @@ spring:
 user:
   management:
     api:
-      base-url: http://localhost:8080/user-management/auth/
+      base-url: ${USER_MANAGEMENT_API_BASE_URL}
 server:
-  port: 8090
+  port: ${SERVER_PORT}
 jwt:
-  secret: ayFyjaxTLdllxt8GvjrBBwyYfyrayv9dclPJHK101kb9RIfrs2NdGi2WCPvV+Ok996aX8C/q8q8+X2KaHTkQtw==
-  internal: djUPkee9MDnEZgT6hnMc7dAXKIO8J46VDfFkVajL9ADo6nd3TUJ9/yF/ca/dTPqSvtPBFmWmBzSPh/m0Mvi1yw==
+  secret: ${JWT_SECRET}
+  internal: ${JWT_INTERNAL}

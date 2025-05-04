@@ -72,7 +72,7 @@ public class AuthService implements UserDetailsManager {
 
     public String login(LoginRequest loginRequest) {
         if (loginRequest.getIdentifier() == null || loginRequest.getIdentifier().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
+            throw new IllegalArgumentException("Identifier cannot be null or empty");
         }
 
         if (loginRequest.getPassword() == null || loginRequest.getPassword().isBlank()) {
