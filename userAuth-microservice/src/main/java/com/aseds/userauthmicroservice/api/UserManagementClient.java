@@ -4,9 +4,8 @@ import com.aseds.userauthmicroservice.model.AbstractUser;
 import com.aseds.userauthmicroservice.model.RegisterRequest;
 import com.aseds.userauthmicroservice.model.UserDTO;
 import com.aseds.userauthmicroservice.model.UserDetail;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,14 +18,14 @@ import java.util.Optional;
 
 @Service
 public class UserManagementClient {
-    private static final Logger logger = LoggerFactory.getLogger(UserManagementClient.class);
 
     private static final String USERS_ENDPOINT = "/users/{identifier}";
     private static final String REGISTER_ENDPOINT = "/register";
     private final PasswordEncoder passwordEncoder;
     private final String baseUrl;
     private final RestTemplate restTemplate;
-
+    @Value("${jwt.internal}")
+    private String internalSecretKey;
     public UserManagementClient(PasswordEncoder passwordEncoder, @Value("${user.management.api.base-url}") String baseUrl,
                                 RestTemplate restTemplate) {
         this.passwordEncoder = passwordEncoder;
@@ -36,36 +35,61 @@ public class UserManagementClient {
 
     public Optional<UserDetails> getUserByIdentifier(String identifier) {
         try {
-            AbstractUser user = restTemplate.getForObject(
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-INTERNAL-SECRET", internalSecretKey);
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+            ResponseEntity<AbstractUser> response = restTemplate.exchange(
                     baseUrl + USERS_ENDPOINT,
+                    HttpMethod.GET,
+                    requestEntity,
                     AbstractUser.class,
                     identifier
             );
-            return Optional.ofNullable(user).map(UserDetail::new);
+
+            return Optional.ofNullable(response.getBody())
+                    .map(UserDetail::new);
+        } catch (HttpClientErrorException.NotFound e) {
+            return Optional.empty();
         } catch (RestClientException e) {
-            logger.error("Error fetching user with identifier: {}", identifier, e);
             throw new UserManagementException("Failed to retrieve user", e);
         }
     }
 
     public void registerUser(RegisterRequest registerRequest) {
+        if (registerRequest == null) {
+            throw new IllegalArgumentException("Register request cannot be null");
+        }
+
         registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+
         try {
-            restTemplate.postForObject(
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-INTERNAL-SECRET", internalSecretKey);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<RegisterRequest> requestEntity = new HttpEntity<>(registerRequest, headers);
+
+            restTemplate.exchange(
                     UriComponentsBuilder.fromUriString(baseUrl)
                             .path(REGISTER_ENDPOINT)
                             .build()
                             .toUriString(),
-                    registerRequest,
+                    HttpMethod.POST,
+                    requestEntity,
                     UserDTO.class
             );
+
+
         } catch (HttpClientErrorException.BadRequest e) {
             String responseMessage = e.getResponseBodyAsString();
-            logger.error("Error registering user: {}", registerRequest.getUsername());
-            throw new IllegalArgumentException(responseMessage, e);
+            throw new IllegalArgumentException("Invalid registration data: " + responseMessage, e);
+
+        } catch (HttpClientErrorException.Conflict e) {
+            String responseMessage = e.getResponseBodyAsString();
+            throw new IllegalArgumentException("User already exists: " + responseMessage, e);
 
         } catch (RestClientException e) {
-            logger.error("Unexpected error during user registration: {}", registerRequest.getUsername());
             throw new UserManagementException("Failed to register user", e);
         }
     }

@@ -37,7 +37,7 @@ public class JwtService {
         return buildToken(user, refreshExpiration);
     }
 
-    private String buildToken( AbstractUser user, long expiration) {
+    private String buildToken(AbstractUser user, long expiration) {
         try {
             Date now = new Date();
             Date expiryDate = new Date(now.getTime() + expiration);

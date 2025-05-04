@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PFA-INE2.iml" filepath="$PROJECT_DIR$/.idea/PFA-INE2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userManagement-microservice/userManagement-microservice.iml" filepath="$PROJECT_DIR$/userManagement-microservice/userManagement-microservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userManagement-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userManagement-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userManagement-microservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/userManagement-microservice.test.iml" />
     </modules>
   </component>
 </project>
