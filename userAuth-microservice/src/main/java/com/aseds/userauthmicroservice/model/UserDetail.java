@@ -1,5 +1,6 @@
 package com.aseds.userauthmicroservice.model;
 
+import com.aseds.userauthmicroservice.enums.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -46,5 +47,8 @@ public record UserDetail(AbstractUser user) implements UserDetails {
     @Override
     public AbstractUser user() {
         return this.user;
+    }
+    public Roles getRole() {
+        return user.getRole();
     }
 }

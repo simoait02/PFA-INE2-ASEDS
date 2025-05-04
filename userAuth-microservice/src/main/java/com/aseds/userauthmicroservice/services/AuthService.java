@@ -39,6 +39,7 @@ public class AuthService implements UserDetailsManager {
             newUser.setPassword(user.getPassword());
             newUser.setPhone(((UserDetail) user).getPhone());
             newUser.setUsername(user.getUsername());
+            newUser.setRole(((UserDetail) user).getRole());
             userManagementClient.registerUser(newUser);
         }catch (RestClientException e) {
             throw new RestClientException("Failed to register user", e);

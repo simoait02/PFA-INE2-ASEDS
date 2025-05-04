@@ -1,6 +1,7 @@
 package com.aseds.usermanagementmicroservice.services;
 
 import com.aseds.usermanagementmicroservice.model.AbstractUser;
+import com.aseds.usermanagementmicroservice.model.UserEntity;
 import com.aseds.usermanagementmicroservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,6 +57,11 @@ public class UserService {
         Optional.ofNullable(updatedUser.getUsername()).ifPresent(existingUser::setUsername);
         Optional.ofNullable(updatedUser.getPassword()).ifPresent(existingUser::setPassword);
         Optional.ofNullable(updatedUser.getProfilePictureUrl()).ifPresent(existingUser::setProfilePictureUrl);
+        if (updatedUser instanceof UserEntity updatedUserEntity && existingUser instanceof UserEntity existingUserEntity) {
+            Optional.ofNullable(updatedUserEntity.getBio())
+                    .filter(bio -> !bio.equals(existingUserEntity.getBio()))
+                    .ifPresent(existingUserEntity::setBio);
+        }
 
         return userRepository.save(existingUser);
     }

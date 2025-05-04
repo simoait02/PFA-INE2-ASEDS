@@ -1,5 +1,6 @@
 package com.aseds.userauthmicroservice.controller;
 
+import com.aseds.userauthmicroservice.enums.Roles;
 import com.aseds.userauthmicroservice.model.AbstractUser;
 import com.aseds.userauthmicroservice.model.LoginRequest;
 import com.aseds.userauthmicroservice.model.RegisterRequest;
@@ -28,6 +29,7 @@ public class AuthController {
             user.setUsername(userDetail.getUsername());
             user.setPassword(userDetail.getPassword());
             user.setBirthDate(userDetail.getBirthDate());
+            user.setRole(userDetail.getRole());
             UserDetail newUser=new UserDetail(user);
             authService.createUser(newUser);
             return ResponseEntity.ok("User registered successfully");

@@ -1,5 +1,6 @@
 package com.aseds.usermanagementmicroservice.model.dto;
 
+import com.aseds.usermanagementmicroservice.enums.Roles;
 import lombok.*;
 import java.util.Date;
 
@@ -14,4 +15,5 @@ public class RegisterRequest {
     private String phone;
     private String password;
     private Date birthDate;
+    private Roles role;
 }
