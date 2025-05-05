@@ -1,7 +1,9 @@
 package com.aseds.usermanagementmicroservice.services;
 
+import com.aseds.usermanagementmicroservice.mappers.implementation.UserMapperDTO;
 import com.aseds.usermanagementmicroservice.model.AbstractUser;
 import com.aseds.usermanagementmicroservice.model.UserEntity;
+import com.aseds.usermanagementmicroservice.model.dto.UserDTO;
 import com.aseds.usermanagementmicroservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,17 +16,19 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapperDTO userMapperDTO;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapperDTO userMapperDTO) {
         this.userRepository = userRepository;
+        this.userMapperDTO = userMapperDTO;
     }
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
-    public AbstractUser partialUpdateUserById(Long id, AbstractUser updatedUser) {
+    public UserDTO partialUpdateUserById(Long id, AbstractUser updatedUser) {
         if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -39,7 +43,7 @@ public class UserService {
                 .orElseThrow(() -> createUserNotFoundException(id));
     }
 
-    private AbstractUser updateUserFields(AbstractUser existingUser, AbstractUser updatedUser) {
+    private UserDTO updateUserFields(AbstractUser existingUser, AbstractUser updatedUser) {
         Optional.ofNullable(updatedUser.getEmail())
                 .filter(email -> !email.equals(existingUser.getEmail()))
                 .ifPresent(email -> {
@@ -63,7 +67,7 @@ public class UserService {
                     .ifPresent(existingUserEntity::setBio);
         }
 
-        return userRepository.save(existingUser);
+        return userMapperDTO.mapTo(userRepository.save(existingUser));
     }
 
     private void validateEmailUniqueness(String email, Long currentUserId) {
@@ -88,11 +92,24 @@ public class UserService {
         return new IllegalArgumentException("User not found with ID: " + id);
     }
 
-    public Page<AbstractUser> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserDTO> findAll(Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable parameter cannot be null");
+        }
+        try {
+            Page<AbstractUser> userPage = userRepository.findAll(pageable);
+            return userPage.map(userMapperDTO::mapTo);
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving users", e);
+        }
     }
 
-    public AbstractUser findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("user not found"));
+    public UserDTO findUserById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
+        return userRepository.findById(id)
+                .map(userMapperDTO::mapTo)
+                .orElseThrow(() -> createUserNotFoundException(id));
     }
 }

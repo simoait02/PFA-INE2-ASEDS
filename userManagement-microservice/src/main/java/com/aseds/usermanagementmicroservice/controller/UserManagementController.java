@@ -1,6 +1,7 @@
 package com.aseds.usermanagementmicroservice.controller;
 
 import com.aseds.usermanagementmicroservice.model.AbstractUser;
+import com.aseds.usermanagementmicroservice.model.dto.UserDTO;
 import com.aseds.usermanagementmicroservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,16 +20,16 @@ public class UserManagementController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<AbstractUser> updateUserById(@PathVariable Long id,@RequestBody AbstractUser user) {
+    public ResponseEntity<UserDTO> updateUserById(@PathVariable Long id, @RequestBody AbstractUser user) {
         return ResponseEntity.ok(userService.partialUpdateUserById(id, user));
     }
     @GetMapping("{id}")
-    public ResponseEntity<AbstractUser> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<AbstractUser>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {
         return ResponseEntity.ok(userService.findAll(pageable));
     }
     @DeleteMapping("{id}")
