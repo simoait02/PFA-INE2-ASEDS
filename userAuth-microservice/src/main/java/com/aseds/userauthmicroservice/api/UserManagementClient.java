@@ -62,7 +62,6 @@ public class UserManagementClient {
         }
 
         registerRequest.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-INTERNAL-SECRET", internalSecretKey);
