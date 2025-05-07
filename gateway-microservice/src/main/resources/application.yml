@@ -14,5 +14,9 @@ spring:
           uri: ${ROUTES_USER_MANAGEMENT_URI}
           predicates:
             - Path=/user-management/**
+        - id: ${ROUTES_CHANNEL_ID}
+          uri: ${ROUTES_CHANNEL_URI}
+          predicates:
+            - Path=/channels/**
 server:
   port: 8070
