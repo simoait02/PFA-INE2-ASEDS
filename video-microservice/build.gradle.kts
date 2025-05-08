@@ -24,8 +24,13 @@ repositories {
 }
 
 dependencies {
+    implementation("io.github.cdimascio:java-dotenv:5.2.2")
+    implementation("org.modelmapper:modelmapper:2.1.1")
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+    implementation("org.hibernate.validator:hibernate-validator:7.0.5.Final")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-hateoas")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

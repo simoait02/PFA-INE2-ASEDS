@@ -37,5 +37,10 @@ public class UserManagementController {
         userService.deleteUserById(id);
         return ResponseEntity.ok("user deleted successfully");
     }
+    @PostMapping("/exist/{id}")
+    public ResponseEntity<Boolean> isExistUser(@PathVariable Long id){
+        return ResponseEntity.ok(userService.isUserExists(id));
+    }
+
 
 }

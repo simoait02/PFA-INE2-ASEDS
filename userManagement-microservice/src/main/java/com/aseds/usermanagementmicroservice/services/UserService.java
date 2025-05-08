@@ -112,4 +112,8 @@ public class UserService {
                 .map(userMapperDTO::mapTo)
                 .orElseThrow(() -> createUserNotFoundException(id));
     }
+
+    public boolean isUserExists(Long id) {
+        return userRepository.existsById(id);
+    }
 }
