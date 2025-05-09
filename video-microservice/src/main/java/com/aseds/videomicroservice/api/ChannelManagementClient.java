@@ -10,32 +10,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
-
 @Service
-public class UserManagementClient {
-    private static final String VERIFY_USER_ENDPOINT= "/exist/";
+public class ChannelManagementClient {
+    private static final String VERIFY_CHANNEL_ENDPOINT = "/exist/";
     @Value("${jwt.internal}")
     private String internalSecretKey;
     private final String baseUrl;
     private final RestTemplate restTemplate;
 
     @Autowired
-    public UserManagementClient(@Value("${user.management.api.base-url}") String baseUrl, RestTemplate restTemplate) {
+    public ChannelManagementClient(@Value("${channel.management.api.base-url}") String baseUrl, RestTemplate restTemplate) {
         this.baseUrl = baseUrl;
         this.restTemplate = restTemplate;
     }
 
 
-    public boolean isUserExist(Long id) {
+    public boolean isChannelExist(int id) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-INTERNAL-SECRET", internalSecretKey);
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
             ResponseEntity<Boolean> response = restTemplate.exchange(
-                    baseUrl + VERIFY_USER_ENDPOINT + id,
-                    HttpMethod.POST,
+                    baseUrl + VERIFY_CHANNEL_ENDPOINT + id,
+                    HttpMethod.GET,
                     requestEntity,
                     Boolean.class
             );

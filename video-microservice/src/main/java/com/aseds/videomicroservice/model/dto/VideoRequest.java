@@ -16,7 +16,7 @@ public class VideoRequest {
     private String title;
     private String videoUrl;
     private String[] tags;
-    private Long uploaderId;
+    private int channelId;
     private LocalDateTime uploadDate;
     private int duration;
     private String[] resolutions;

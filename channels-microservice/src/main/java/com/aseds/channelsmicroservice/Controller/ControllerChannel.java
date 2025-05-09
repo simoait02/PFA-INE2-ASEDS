@@ -42,5 +42,9 @@ public class ControllerChannel {
     public ResponseEntity<Channel_dto> getChannelByOwen(@PathVariable int id){
         return ResponseEntity.ok(this.service.getChannelByOwnerId(id));
     }
+    @GetMapping("/exist/{id}")
+    public ResponseEntity<Boolean> isExistUser(@PathVariable int id){
+        return ResponseEntity.ok(service.isChannelExist(id));
+    }
 
 }

@@ -54,4 +54,7 @@ public class service_channel_management {
     public void deleteChannel(int id){
         this.repository.deleteById(id);
     }
+    public boolean isChannelExist(int id){
+        return this.repository.findById(id).isPresent();
     }
+}

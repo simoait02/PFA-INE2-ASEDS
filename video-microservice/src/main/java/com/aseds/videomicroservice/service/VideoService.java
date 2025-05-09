@@ -1,7 +1,7 @@
 package com.aseds.videomicroservice.service;
 
-import com.aseds.videomicroservice.api.UserManagementClient;
-import com.aseds.videomicroservice.controller.VideoNotFoundException;
+import com.aseds.videomicroservice.api.ChannelManagementClient;
+import com.aseds.videomicroservice.exceptions.VideoNotFoundException;
 import com.aseds.videomicroservice.mapper.impl.VideoMapper;
 import com.aseds.videomicroservice.mapper.impl.VideoMapperDTO;
 import com.aseds.videomicroservice.model.Comment;
@@ -30,12 +30,12 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final VideoMapper videoMapper;
     private final VideoMapperDTO videoMapperDTO;
-    private final UserManagementClient userManagementClient;
+    private final ChannelManagementClient channelManagementClient;
 
     public VideoDTO createVideo(VideoRequest videoRequest) {
         validateVideoRequest(videoRequest);
-        if(!userManagementClient.isUserExist(videoRequest.getUploaderId())){
-            throw new IllegalArgumentException("can't upload video user not exist");
+        if(!channelManagementClient.isChannelExist(videoRequest.getChannelId())){
+            throw new IllegalArgumentException("can't upload video channel not exist");
         }
         videoRequest.setUploadDate(LocalDateTime.now());
         Video newVideo = videoMapper.mapTo(videoRequest);
@@ -51,15 +51,15 @@ public class VideoService {
         return videoMapperDTO.mapTo(video);
     }
 
-    public PagedModel<VideoDTO> getAllUserVideos(Long userId, Pageable pageable) {
-        validateUserId(userId);
+    public PagedModel<VideoDTO> getAllChannelVideos(int channelId, Pageable pageable) {
+        validateChannelId(channelId);
 
         try {
-            Page<Video> videosPage = videoRepository.findByUploaderId(userId, pageable);
+            Page<Video> videosPage = videoRepository.findByChannelId(channelId, pageable);
             List<VideoDTO> videoDTOs = convertToVideoDTOList(videosPage);
             return createPagedModel(videosPage, videoDTOs, pageable);
         } catch (Exception e) {
-            throw new RuntimeException("Error retrieving videos for user: " + userId, e);
+            throw new RuntimeException("Error retrieving videos for channel: " + channelId, e);
         }
     }
 
@@ -92,12 +92,9 @@ public class VideoService {
         }
     }
 
-    private void validateUserId(Long userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
-        if (userId <= 0) {
-            throw new IllegalArgumentException("User ID must be positive");
+    private void validateChannelId(int channelId) {
+        if (channelId <= 0) {
+            throw new IllegalArgumentException("Channel ID must be positive");
         }
     }
 

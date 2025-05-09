@@ -29,7 +29,7 @@ public class Video {
     private String title;
 
     @NotBlank
-    private Long uploaderId;
+    private int channelId;
 
     @NotNull
     private LocalDateTime uploadDate;

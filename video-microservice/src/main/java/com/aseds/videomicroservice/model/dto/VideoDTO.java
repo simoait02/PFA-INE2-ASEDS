@@ -16,7 +16,7 @@ import java.util.List;
 public class VideoDTO {
     private String videoId;
     private String title;
-    private Long uploaderId;
+    private int channelId;
     private String videoUrl;
     private LocalDateTime uploadDate;
     private int duration;

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends CrudRepository<Video, String>, PagingAndSortingRepository<Video ,String> {
-    Page<Video> findByUploaderId(Long uploaderId, Pageable pageable);
+    Page<Video> findByChannelId(int channelId, Pageable pageable);
 
 }
