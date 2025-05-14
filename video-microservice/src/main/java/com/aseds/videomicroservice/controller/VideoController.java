@@ -33,7 +33,7 @@ public class VideoController {
         return ResponseEntity.ok(video);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/channel/{id}")
     public ResponseEntity<PagedModel<VideoDTO>> getAllUserVideos(
             @PathVariable int id,
             @RequestParam(defaultValue = "0") int page,

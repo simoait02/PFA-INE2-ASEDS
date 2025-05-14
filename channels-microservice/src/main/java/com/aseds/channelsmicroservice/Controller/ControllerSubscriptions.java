@@ -1,7 +1,7 @@
 package com.aseds.channelsmicroservice.Controller;
 
 
-import com.aseds.channelsmicroservice.Services.service_channel_subscriptions;
+import com.aseds.channelsmicroservice.Services.ServiceChannelSubscriptions;
 import com.aseds.channelsmicroservice.models.dto.Channel_dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/channels/subscription")
 public class ControllerSubscriptions {
     @Autowired
-    private service_channel_subscriptions serviceChannelSubscriptions;
+    private ServiceChannelSubscriptions serviceChannelSubscriptions;
 
     @PostMapping("/{idchannel}/users/{iduser}")
     public ResponseEntity<String> subscrib(@PathVariable("idchannel") int channel_id,@PathVariable("iduser") int user_id){

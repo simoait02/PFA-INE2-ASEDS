@@ -1,7 +1,7 @@
 package com.aseds.channelsmicroservice.Controller;
 
 
-import com.aseds.channelsmicroservice.Services.service_channel_management;
+import com.aseds.channelsmicroservice.Services.ServiceChannelManagement;
 import com.aseds.channelsmicroservice.models.dto.Channel_dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/channels")
 public class ControllerChannel {
     @Autowired
-    private service_channel_management service;
+    private ServiceChannelManagement service;
 
     @GetMapping("/")
     public ResponseEntity<List<Channel_dto>> getAllChannels(){
@@ -45,6 +45,10 @@ public class ControllerChannel {
     @GetMapping("/exist/{id}")
     public ResponseEntity<Boolean> isExistUser(@PathVariable int id){
         return ResponseEntity.ok(service.isChannelExist(id));
+    }
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<Channel_dto>> searchChannels(@PathVariable String name){
+        return ResponseEntity.ok(this.service.searchChannelsByName(name));
     }
 
 }
