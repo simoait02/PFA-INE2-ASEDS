@@ -40,7 +40,7 @@ public class VideoService {
         videoRequest.setUploadDate(LocalDateTime.now());
         Video newVideo = videoMapper.mapTo(videoRequest);
         newVideo.setComments(new ArrayList<>());
-
+        newVideo.setVideoUrl(videoRequest.getVideoUrl());
         Video savedVideo = videoRepository.save(newVideo);
         return videoMapperDTO.mapTo(savedVideo);
     }

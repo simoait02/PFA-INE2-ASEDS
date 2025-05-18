@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/channels")
 public class ControllerChannel {
-    @Autowired
-    private service_channel_management service;
+
+    private final service_channel_management service;
+
+    public ControllerChannel(service_channel_management service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     public ResponseEntity<List<Channel_dto>> getAllChannels(){
@@ -36,7 +40,7 @@ public class ControllerChannel {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteChannel(@PathVariable int id){
         this.service.deleteChannel(id);
-        return ResponseEntity.status(201).body("USER DELETED");
+        return ResponseEntity.status(204).body("Channel DELETED");
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<Channel_dto> getChannelByOwen(@PathVariable int id){

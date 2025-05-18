@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/video")
+@RequestMapping("/videos")
 public class VideoController {
     private final VideoService videoService;
 
@@ -21,7 +21,7 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<VideoDTO> addVideo(@RequestBody VideoRequest videoRequest) {
         VideoDTO createdVideo = videoService.createVideo(videoRequest);
         return new ResponseEntity<>(createdVideo, HttpStatus.CREATED);
@@ -33,8 +33,8 @@ public class VideoController {
         return ResponseEntity.ok(video);
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<PagedModel<VideoDTO>> getAllUserVideos(
+    @GetMapping("/channel/{id}")
+    public ResponseEntity<PagedModel<VideoDTO>> getAllChannelVideos(
             @PathVariable int id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

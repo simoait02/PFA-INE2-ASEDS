@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: stream-microservice
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${MONGO_PORT}/${MONGO_DB}?authSource=admin
+
+nginx:
+  rtmp: ${NGINX_RTMP}
+server:
+  port: 8085

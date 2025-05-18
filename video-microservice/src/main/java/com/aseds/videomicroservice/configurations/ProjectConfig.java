@@ -1,4 +1,4 @@
-package com.aseds.videomicroservice.configuration;
+package com.aseds.videomicroservice.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -5,6 +5,8 @@
     <file type="web" url="file://$PROJECT_DIR$/channels-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/gateway-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/storage-microservice" />
+    <file type="web" url="file://$PROJECT_DIR$/storagevideo-microservice" />
+    <file type="web" url="file://$PROJECT_DIR$/stream-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/userAuth-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/userManagement-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/video-microservice" />
