@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class service_channel_subscriptions {
+public class ServiceChannelSubscriptions {
 
     @Autowired
     private Channel_repository repository;

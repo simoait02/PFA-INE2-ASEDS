@@ -17,6 +17,7 @@ public class ChannelEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
+    @Column(unique = true)
     private int ownerId;
     private String name;
     @ElementCollection

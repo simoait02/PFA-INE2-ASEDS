@@ -14,6 +14,8 @@ public interface Channel_repository extends JpaRepository<ChannelEntity,Integer>
     // for getting  all the channels that the user has been subscribed
     @Query("SELECT c FROM ChannelEntity c WHERE :userId IN elements(c.subscriptions)")
     List<ChannelEntity> findAllBySubscriberId(@Param("userId") int userId);
+    // to find all the channels that contains the target name
+    List<ChannelEntity> findByNameContainingIgnoreCase(String name);
 
 
 }

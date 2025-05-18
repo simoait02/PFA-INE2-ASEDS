@@ -1,7 +1,7 @@
 package com.aseds.channelsmicroservice.Controller;
 
 
-import com.aseds.channelsmicroservice.Services.service_channel_management;
+import com.aseds.channelsmicroservice.Services.ServiceChannelManagement;
 import com.aseds.channelsmicroservice.models.dto.Channel_dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/channels")
 public class ControllerChannel {
-
-    private final service_channel_management service;
-
-    public ControllerChannel(service_channel_management service) {
-        this.service = service;
-    }
+    @Autowired
+    private ServiceChannelManagement service;
 
     @GetMapping("/")
     public ResponseEntity<List<Channel_dto>> getAllChannels(){
@@ -40,7 +36,7 @@ public class ControllerChannel {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteChannel(@PathVariable int id){
         this.service.deleteChannel(id);
-        return ResponseEntity.status(204).body("Channel DELETED");
+        return ResponseEntity.status(201).body("USER DELETED");
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<Channel_dto> getChannelByOwen(@PathVariable int id){
@@ -49,6 +45,10 @@ public class ControllerChannel {
     @GetMapping("/exist/{id}")
     public ResponseEntity<Boolean> isExistUser(@PathVariable int id){
         return ResponseEntity.ok(service.isChannelExist(id));
+    }
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<Channel_dto>> searchChannels(@PathVariable String name){
+        return ResponseEntity.ok(this.service.searchChannelsByName(name));
     }
 
 }

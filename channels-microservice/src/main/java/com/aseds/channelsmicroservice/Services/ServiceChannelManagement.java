@@ -6,13 +6,14 @@ import com.aseds.channelsmicroservice.models.ChannelEntity;
 import com.aseds.channelsmicroservice.models.dto.Channel_dto;
 import com.aseds.channelsmicroservice.repositories.Channel_repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class service_channel_management {
+public class ServiceChannelManagement {
     @Autowired
     private Channel_repository repository;
     @Autowired
@@ -38,6 +39,11 @@ public class service_channel_management {
                 .map(mapper::toDto)
                 .orElseThrow(() -> new IllegalArgumentException("CHANNEL NOT FOUND FOR USER_ID " + id));
     }
+    public List<Channel_dto> searchChannelsByName(String name){
+        return this.repository
+                .findByNameContainingIgnoreCase(name)
+                .stream().map(mapper::toDto).collect(Collectors.toList());
+    }
 
     public Channel_dto updateChannel(int id,Channel_dto channel_dto){
         ChannelEntity channel =this.repository.findById(id)
@@ -47,9 +53,14 @@ public class service_channel_management {
     }
 
     public Channel_dto createChannel(Channel_dto channelDto) {
-        ChannelEntity created=this.repository.save(this.mapper
-                .toEntity(channelDto));
-        return mapper.toDto(created);
+        try{
+            ChannelEntity created=this.repository.save(this.mapper
+                    .toEntity(channelDto));
+            return mapper.toDto(created);
+        }catch (DataIntegrityViolationException ex) {
+            throw new IllegalArgumentException("OWNER ID ALREADY EXIST.");
+        }
+
     }
     public void deleteChannel(int id){
         this.repository.deleteById(id);

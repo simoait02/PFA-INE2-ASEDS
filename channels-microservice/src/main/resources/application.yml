@@ -11,5 +11,14 @@ spring:
       ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  graphql:
+    graphiql:
+      enabled: true
+video:
+  management:
+    api:
+      base-url: ${VIDEO_MANAGEMENT_API_BASE_URL}
+
+
 server:
   port: 8444
