@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --address :9000 --console-address :9001
+    volumes:
+      - minio-data:/data
+    networks:
+      - storage-net
+    restart: unless-stopped
+
+  rtmp-server:
+    build:
+      context: .
+    container_name: rtmp-server
+    ports:
+      - "80:80"
+      - "1935:1935"
+    networks:
+      - storage-net
+
+volumes:
+  minio-data:
+    driver: local
+
+networks:
+  storage-net:
+    driver: bridge

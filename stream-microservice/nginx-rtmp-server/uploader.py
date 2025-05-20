@@ -39,7 +39,7 @@ def main():
     log(f"🚀 Starting upload for: {file_path}")
 
     minio_client = Minio(
-        "10.187.126.207:30900",
+        "minio:9000",
         access_key="minioadmin",
         secret_key="minioadmin",
         secure=False
