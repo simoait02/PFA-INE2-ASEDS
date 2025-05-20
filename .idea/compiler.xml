@@ -14,6 +14,9 @@
       <module name="storage-microservice" target="17" />
       <module name="storage-microservice.main" target="17" />
       <module name="storage-microservice.test" target="17" />
+      <module name="storagevideo-microservice" target="17" />
+      <module name="storagevideo-microservice.main" target="17" />
+      <module name="storagevideo-microservice.test" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
