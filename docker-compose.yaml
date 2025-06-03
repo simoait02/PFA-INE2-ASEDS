@@ -23,6 +23,17 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME2}
 
+  database3:
+    image: postgres
+    ports:
+      - ${DB_PORT3}:5432
+    volumes:
+      - datauser3:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME3}
+
   VideoDatabase:
     image: mongo
     container_name: mongo
@@ -66,6 +77,8 @@ volumes:
   datauser:
     driver: local
   datauser2:
+    driver: local
+  datauser3:
     driver: local
   mongodata1:
     driver: local
