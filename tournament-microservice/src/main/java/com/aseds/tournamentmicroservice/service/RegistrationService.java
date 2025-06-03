@@ -29,28 +29,23 @@ public class RegistrationService {
     }
 
     public String registerParticipant(RegistrationDTO registrationDTO) {
-        // Check if registration already exists by email and tournament ID
         if (registrationExists(registrationDTO)) {
             return REGISTRATION_EXISTS;
         }
 
-        // Save the registration first
         Registration savedRegistration = registrationRepository.save(
                 registrationMapper.mapFrom(registrationDTO)
         );
 
-        // Simply return success - don't update tournament with registrations
-        // The relationship should be managed through the Registration entity
+
         return REGISTRATION_ADDED;
     }
 
     public String cancelRegistration(Long id) {
-        // Check if registration exists first
         if (!registrationRepository.existsById(id)) {
             return REGISTRATION_NOT_FOUND;
         }
 
-        // Simply delete the registration - the relationship will be handled by JPA
         registrationRepository.deleteById(id);
 
         return REGISTRATION_DELETED;
@@ -69,7 +64,6 @@ public class RegistrationService {
         dto.setParticipantName(registration.getParticipantName());
         dto.setEmail(registration.getEmail());
         dto.setTeamName(registration.getTeamName());
-        // Don't set tournament to avoid circular reference
         return dto;
     }
 
