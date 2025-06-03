@@ -11,9 +11,10 @@ pipeline {
           }
         }
         steps {
-           dir(' channels-microservice') {
+           dir('channels-microservice') {
                sh 'gradle build -x test'
            }
+
         }
       }
    }
