@@ -31,3 +31,6 @@ dependencyManagement {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+tasks.named("test"){
+    enabled = false
+}

@@ -46,7 +46,7 @@ def main():
     )
 
     bucket_name = "videos"
-    host_ip = "192.168.59.165"
+    host_ip = "192.168.63.38"
 
     try:
         stream_key = os.path.splitext(filename)[0]

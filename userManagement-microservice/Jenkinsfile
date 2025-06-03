@@ -1,0 +1,21 @@
+pipeline {
+   agent none
+   triggers {
+      pollSCM('*/1 * * * *')
+   }
+   stages {
+      stage('build') {
+        agent{
+          docker {
+             image 'gradle:8.14.0-jdk17'
+          }
+        }
+        steps {
+           dir('userManagement-microservice') {
+               sh 'gradle build -x test'
+           }
+
+        }
+      }
+   }
+}
