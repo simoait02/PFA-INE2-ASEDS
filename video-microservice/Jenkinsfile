@@ -7,11 +7,14 @@ pipeline {
       stage('build') {
         agent{
           docker {
-             image 'gradle:8.14.0-jdk21'
+             image 'gradle:8.14.0-jdk17'
           }
         }
         steps {
-           sh 'gradle build -x test'
+           dir('video-microservice') {
+               sh 'gradle build -x test'
+           }
+
         }
       }
    }
