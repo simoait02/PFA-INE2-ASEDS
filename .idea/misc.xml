@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/blogs-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/channels-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/gateway-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/storage-microservice" />
@@ -13,7 +14,7 @@
     <file type="web" url="file://$PROJECT_DIR$/userManagement-microservice" />
     <file type="web" url="file://$PROJECT_DIR$/video-microservice" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
