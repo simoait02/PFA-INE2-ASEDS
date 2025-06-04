@@ -19,7 +19,7 @@ pipeline {
         steps {
            dir('channels-microservice') {
                sh 'gradle build -x test'
-               archiveArtifacts artifacts: 'channels-microservice/build/libs/*.jar', fingerprint: true
+               archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
            }
 
         }
