@@ -6,7 +6,13 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 public class BlogsMicroserviceApplication {
+	private static final boolean IS_TEST = System.getProperty("spring.profiles.active") != null;
 	static {
+		if (!IS_TEST) {
+			loadEnvFile();
+		}
+	}
+	private static void loadEnvFile() {
 		Dotenv dotenv = Dotenv.configure()
 				.directory("blogs-microservice")
 				.filename(".env")

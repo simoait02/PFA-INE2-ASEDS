@@ -6,8 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TournamentMicroserviceApplication {
+    private static final boolean IS_TEST = System.getProperty("spring.profiles.active") != null;
 
-    public static void main(String[] args) {
+    static {
+        if (!IS_TEST) {
+            loadEnvFile();
+        }
+    }
+
+    private static void loadEnvFile() {
         Dotenv dotenv = Dotenv.configure()
                 .directory("tournament-microservice")
                 .filename(".env")
@@ -16,6 +23,8 @@ public class TournamentMicroserviceApplication {
         dotenv.entries().forEach(entry ->
                 System.setProperty(entry.getKey(), entry.getValue())
         );
+    }
+    public static void main(String[] args) {
         SpringApplication.run(TournamentMicroserviceApplication.class, args);
     }
 

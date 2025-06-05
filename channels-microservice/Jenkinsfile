@@ -10,7 +10,7 @@ pipeline {
 
    }
    stages {
-      /*stage('build stage') {
+      stage('build stage') {
         agent{
           docker {
              image 'gradle:8.14.0-jdk17'
@@ -23,7 +23,7 @@ pipeline {
            }
 
         }
-      }*/
+      }
       stage('sast') {
          agent {
             docker {
@@ -49,7 +49,7 @@ pipeline {
          }
       }
 
-      /*stage('package stage') {
+      stage('package stage') {
         agent {
           docker {
              image 'docker:24.0-cli'
@@ -99,6 +99,6 @@ pipeline {
 
          }
 
-      }*/
+      }
    }
 }
