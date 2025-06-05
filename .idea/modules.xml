@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/PFA-INE2.iml" filepath="$PROJECT_DIR$/.idea/PFA-INE2.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/channels-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/channels-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/stream-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/stream-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tournament-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tournament-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userManagement-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/userManagement-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userManagement-microservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/userManagement-microservice.test.iml" />
