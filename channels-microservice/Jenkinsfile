@@ -10,7 +10,7 @@ pipeline {
 
    }
    stages {
-      stage('build stage') {
+      /*stage('build stage') {
         agent{
           docker {
              image 'gradle:8.14.0-jdk17'
@@ -23,8 +23,33 @@ pipeline {
            }
 
         }
+      }*/
+      stage('sast') {
+         agent {
+            docker {
+               image 'gradle:8.14.0-jdk17'
+               args '''
+                    --network jenkins
+                    --entrypoint=""
+                    --user root
+                    -v /var/run/docker.sock:/var/run/docker.sock
+                    '''
+            }
+         }
+         steps{
+            dir('channels-microservice') {
+                 withSonarQubeEnv( installationName: 'sq1') {
+                                 sh '''
+                                    gradle test jacocoTestReport sonar \
+                                           -Dsonar.projectKey=jenkins \
+                                           -Dsonar.projectName='jenkins'
+                                    '''
+                 }
+            }
+         }
       }
-      stage('package stage') {
+
+      /*stage('package stage') {
         agent {
           docker {
              image 'docker:24.0-cli'
@@ -74,6 +99,6 @@ pipeline {
 
          }
 
-      }
+      }*/
    }
 }
