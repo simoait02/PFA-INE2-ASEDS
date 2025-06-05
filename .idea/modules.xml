@@ -3,7 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PFA-INE2.iml" filepath="$PROJECT_DIR$/.idea/PFA-INE2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/blogs-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/blogs-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/channels-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/channels-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.aseds.userAuth-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.aseds.userAuth-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/storage-microservice.iml" filepath="$PROJECT_DIR$/.idea/modules/storage-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/storage-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/storage-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/storage-microservice.test.iml" filepath="$PROJECT_DIR$/.idea/modules/storage-microservice.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/stream-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/stream-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tournament-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tournament-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" filepath="$PROJECT_DIR$/.idea/modules/userAuth-microservice.iml" />

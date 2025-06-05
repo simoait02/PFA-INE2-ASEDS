@@ -57,6 +57,17 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
+  BlogsDatabase:
+    image: postgres
+    ports:
+      - ${DB_PORT4}:5432
+    volumes:
+      - datauser4:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME4}
+
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -83,4 +94,6 @@ volumes:
   mongodata1:
     driver: local
   mongodata2:
+    driver: local
+  datauser4:
     driver: local

@@ -3,8 +3,14 @@ pipeline {
    triggers {
       pollSCM('*/1 * * * *')
    }
+   environment{
+          DOCKER_IMAGE = 'userManagement'
+          DOCKER_TAG = "${env.BUILD_NUMBER}"
+          DOCKER_REPO = 'killerquen69'
+
+   }
    stages {
-      stage('build') {
+      stage('build stage') {
         agent{
           docker {
              image 'gradle:8.14.0-jdk17'
@@ -13,9 +19,61 @@ pipeline {
         steps {
            dir('userManagement-microservice') {
                sh 'gradle build -x test'
+               archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
            }
 
         }
+      }
+      stage('package stage') {
+        agent {
+          docker {
+             image 'docker:24.0-cli'
+             args '--entrypoint="" --user root -v /var/run/docker.sock:/var/run/docker.sock'
+          }
+        }
+        steps{
+           dir('userManagement-microservice') {
+              sh 'docker build -t $DOCKER_REPO/$DOCKER_IMAGE:$DOCKER_TAG .'
+           }
+
+        }
+      }
+      stage('scan stage') {
+         agent {
+            docker {
+              image 'aquasec/trivy'
+              args '--entrypoint="" --user root -v /var/run/docker.sock:/var/run/docker.sock'
+            }
+         }
+         steps {
+            dir('userManagement-microservice') {
+                sh 'trivy image --no-progress --severity HIGH,CRITICAL --skip-files "*.jar" --timeout 20m $DOCKER_REPO/$DOCKER_IMAGE:$DOCKER_TAG'
+            }
+         }
+      }
+      stage('push stage') {
+
+         agent {
+            docker {
+               image 'docker:24.0-cli'
+               args '--entrypoint="" --user root -v /var/run/docker.sock:/var/run/docker.sock'
+            }
+         }
+         steps {
+             dir('userManagement-microservice') {
+
+                withCredentials([usernamePassword(credentialsId: 'killerquen69', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                       echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+                       docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$DOCKER_TAG
+                       '''
+                }
+
+             }
+
+         }
+
       }
    }
 }
