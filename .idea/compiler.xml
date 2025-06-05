@@ -25,6 +25,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="blogs-microservice" options="-parameters" />
+      <module name="blogs-microservice.main" options="-parameters" />
+      <module name="blogs-microservice.test" options="-parameters" />
       <module name="channels-microservice" options="-parameters" />
       <module name="channels-microservice.main" options="-parameters" />
       <module name="channels-microservice.test" options="-parameters" />

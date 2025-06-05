@@ -7,7 +7,19 @@ from datetime import timedelta, datetime
 from minio import Minio
 from minio.error import S3Error
 
+# Hardcoded config instead of env variables
 LOG_PATH = "/tmp/uploader.log"
+RECORDINGS_PATH = "/var/recordings"
+MINIO_HOST = "minio:9000"
+MINIO_ACCESS_KEY = "minioadmin"
+MINIO_SECRET_KEY = "minioadmin"
+MINIO_SECURE = False  # Boolean, not string
+BUCKET_NAME = "videos"
+STREAM_MICROSERVICE_IP = "192.168.1.34"
+VIDEO_MICROSERVICE_IP = "192.168.1.34"
+STREAMS_MANAGEMENT_PORT = 8085
+VIDEO_MANAGEMENT_PORT = 8081
+PRESIGNED_URL_EXPIRY_DAYS = 1
 
 def log(message):
     with open(LOG_PATH, "a") as f:
@@ -30,7 +42,7 @@ def main():
         return
 
     filename = sys.argv[1]
-    file_path = f"/var/recordings/{filename}"
+    file_path = os.path.join(RECORDINGS_PATH, filename)
 
     if not os.path.exists(file_path):
         log(f"❌ File not found: {file_path}")
@@ -39,33 +51,36 @@ def main():
     log(f"🚀 Starting upload for: {file_path}")
 
     minio_client = Minio(
-        "minio:9000",
-        access_key="minioadmin",
-        secret_key="minioadmin",
-        secure=False
+        MINIO_HOST,
+        access_key=MINIO_ACCESS_KEY,
+        secret_key=MINIO_SECRET_KEY,
+        secure=MINIO_SECURE
     )
-
-    bucket_name = "videos"
-    host_ip = "192.168.63.38"
 
     try:
         stream_key = os.path.splitext(filename)[0]
-        response = requests.get(f"http://{host_ip}:8085/streams-management/key/{stream_key}")
+        streams_url = f"http://{STREAM_MICROSERVICE_IP}:{STREAMS_MANAGEMENT_PORT}/streams-management/key/{stream_key}"
+        response = requests.get(streams_url)
+
         if response.status_code != 200:
             log(f"❌ Failed to fetch stream metadata: {response.status_code}")
             return
 
         stream_data = response.json()
 
-        if not minio_client.bucket_exists(bucket_name):
-            minio_client.make_bucket(bucket_name)
-            log(f"📦 Created bucket: {bucket_name}")
+        if not minio_client.bucket_exists(BUCKET_NAME):
+            minio_client.make_bucket(BUCKET_NAME)
+            log(f"📦 Created bucket: {BUCKET_NAME}")
 
         object_name = f"{stream_data['channelId']}/{filename}"
-        minio_client.fput_object(bucket_name, object_name, file_path)
+        minio_client.fput_object(BUCKET_NAME, object_name, file_path)
         log(f"✅ Uploaded to MinIO: {stream_data['channelId']}")
 
-        url = minio_client.presigned_get_object(bucket_name, object_name, expires=timedelta(days=1))
+        url = minio_client.presigned_get_object(
+            BUCKET_NAME,
+            object_name,
+            expires=timedelta(days=PRESIGNED_URL_EXPIRY_DAYS)
+        )
         log(f"🎬 Pre-signed URL: {url}")
 
         start = stream_data.get("startTime")
@@ -86,7 +101,9 @@ def main():
             "tags": stream_data.get("tags", [])
         }
 
-        post_response = requests.post(f"http://{host_ip}:8081/videos", json=video_payload)
+        backend_url = f"http://{VIDEO_MICROSERVICE_IP}:{VIDEO_MANAGEMENT_PORT}/videos"
+        post_response = requests.post(backend_url, json=video_payload)
+
         if post_response.status_code == 201:
             log("📥 Video metadata successfully saved to backend.")
         else:
