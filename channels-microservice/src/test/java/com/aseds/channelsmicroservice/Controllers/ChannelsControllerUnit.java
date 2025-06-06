@@ -37,10 +37,6 @@ public class ChannelsControllerUnit {
     @Autowired
     public MockMvc mockMvc;
     @MockitoBean
-    public Channel_repository channel_repository;
-    @MockitoBean
-    public Mapper chanelmapper;
-    @MockitoBean
     public ServiceChannelManagement channelManagement;
     ObjectMapper mapper=new ObjectMapper();
     String resultContent=null;
@@ -55,22 +51,8 @@ public class ChannelsControllerUnit {
         List<Channel_dto> channelDtos = Arrays.asList(
                 c1,c2
         );
-        ChannelEntity e1 = new ChannelEntity();
-        e1.setName(c1.getName());
-        e1.setDescription(c1.getDescription());
-        e1.setOwnerId(c1.getOwner_id());
-        ChannelEntity e2 = new ChannelEntity();
-        e2.setName(c2.getName());
-        e2.setDescription(c2.getDescription());
-        e2.setOwnerId(c2.getOwner_id());
-        when(chanelmapper.toDto(e1)).thenReturn(c1);
-        when(chanelmapper.toDto(e2)).thenReturn(c2);
         resultContent = mapper.writeValueAsString(channelDtos);
         System.out.println(resultContent);
-        List<ChannelEntity> channelEntities=Arrays.asList(
-                e1,e2
-        );
-        when(channel_repository.findAll()).thenReturn(channelEntities);
         when(channelManagement.getChannels()).thenReturn(channelDtos);
 
         mockMvc.perform(get("/channels/")
@@ -83,13 +65,7 @@ public class ChannelsControllerUnit {
         Channel_dto c1= Channel_dto.builder()
                 .name("c1").description("d1").owner_id(1)
                 .build();
-        ChannelEntity e1 = new ChannelEntity();
-        e1.setName(c1.getName());
-        e1.setDescription(c1.getDescription());
-        e1.setOwnerId(c1.getOwner_id());
-        when(chanelmapper.toDto(e1)).thenReturn(c1);
         resultContent=mapper.writeValueAsString(c1);
-        when(channel_repository.findByOwnerId(1)).thenReturn(Optional.of(e1));
         when(channelManagement.getChannelByOwnerId(1)).thenReturn(c1);
         mockMvc.perform(get("/channels/user/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -101,13 +77,7 @@ public class ChannelsControllerUnit {
         Channel_dto c1= Channel_dto.builder()
                 .name("c1").description("d1").owner_id(1)
                 .build();
-        ChannelEntity e1 = new ChannelEntity();
-        e1.setName(c1.getName());
-        e1.setDescription(c1.getDescription());
-        e1.setOwnerId(c1.getOwner_id());
-        when(chanelmapper.toDto(e1)).thenReturn(c1);
         resultContent=mapper.writeValueAsString(c1);
-        when(channel_repository.save(Mockito.any(ChannelEntity.class))).thenReturn(e1);
         when(channelManagement.createChannel(Mockito.any(Channel_dto.class))).thenReturn(c1);
         this.mockMvc.perform(post("/channels/")
                         .content(resultContent)
@@ -119,14 +89,8 @@ public class ChannelsControllerUnit {
         Channel_dto c1= Channel_dto.builder()
                 .name("c1").description("d1").owner_id(1)
                 .build();
-        ChannelEntity e1 = new ChannelEntity();
-        e1.setName(c1.getName());
-        e1.setDescription(c1.getDescription());
-        e1.setOwnerId(c1.getOwner_id());
-        when(chanelmapper.toDto(e1)).thenReturn(c1);
         resultContent=mapper.writeValueAsString(c1);
-        e1.setId(1);
-        when(channel_repository.findById(Mockito.any(Integer.class))).thenReturn(Optional.of(e1));
+        c1.setId(1);
         when(channelManagement.updateChannel(Mockito.any(Integer.class),Mockito.any(Channel_dto.class))).thenReturn(c1);
         this.mockMvc.perform(patch("/channels/1")
                         .content(resultContent)

@@ -84,6 +84,13 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  channels:
+    image: channelss
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://database2:5432/channels
+      DATASOURCE_USERNAME: postgres
+      DATASOURCE_PASSWORD: hamza
+
 
 volumes:
   datauser:
