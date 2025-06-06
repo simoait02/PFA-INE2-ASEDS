@@ -35,6 +35,8 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("io.github.cdimascio:java-dotenv:5.2.2")
 	testImplementation("com.h2database:h2")
+	testImplementation("org.mockito:mockito-core:5.12.0")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
 }
 
 tasks.withType<Test> {
