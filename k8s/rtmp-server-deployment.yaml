@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtmp-server
+  namespace: twitch
+  labels:
+    app: rtmp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rtmp-server
+  template:
+    metadata:
+      name: rtmp-server
+      labels:
+        app: rtmp-server
+    spec:
+      containers:
+        - name: rtmp-server
+          image: simo3011w/twitch-rtmp-server
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 1935
+              protocol: TCP
+            - containerPort: 80
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rtmp-server-service
+  namespace: twitch
+  labels:
+    app: rtmp-server-service
+spec:
+  selector:
+    app: rtmp-server
+  ports:
+    - name: rtmp
+      port: 1935
+      targetPort: 1935
+      protocol: TCP
+      nodePort: 32000
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  type: NodePort

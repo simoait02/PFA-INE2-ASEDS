@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+  namespace: twitch
+data:
+  database: videos
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-video
+  namespace: twitch
+spec:
+  clusterIP: None
+  ports:
+    - port: 27017
+      name: mongo
+  selector:
+    app: mongo-video
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-database-service
+  namespace: twitch
+spec:
+  selector:
+    app: mongo-video
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-video
+  namespace: twitch
+spec:
+  serviceName: "mongo-video"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-video
+  template:
+    metadata:
+      labels:
+        app: mongo-video
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+              name: mongo
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: mongo_user
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: mongo_password
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: database
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

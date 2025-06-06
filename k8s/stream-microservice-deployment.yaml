@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stream-microservice
+  namespace: twitch
+  labels:
+    app: stream-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stream-microservice
+  template:
+    metadata:
+      name: stream-microservice
+      labels:
+        app: stream-microservice
+    spec:
+      containers:
+        - name: stream-microservice
+          image: simo3011w/twitch-stream-microservice
+          imagePullPolicy: Always
+          env:
+            - name: MONGO_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: mongo_port
+                  name: stream-microservice-secret
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  key: mongo_user
+                  name: stream-microservice-secret
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mongo_password
+                  name: stream-microservice-secret
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  key: mongo_db
+                  name: stream-microservice-secret
+            - name: NGINX_RTMP
+              valueFrom:
+                secretKeyRef:
+                  key: nginx_rtmp
+                  name: stream-microservice-secret
+            - name: HOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: stream-microservice-secret
+          ports:
+            - containerPort: 8085
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stream-microservice-service
+  namespace: twitch
+  labels:
+    app: stream-microservice-service
+spec:
+  selector:
+    app: stream-microservice
+  ports:
+    - port: 8085
+      targetPort: 8085
+      nodePort: 32002
+  type: NodePort

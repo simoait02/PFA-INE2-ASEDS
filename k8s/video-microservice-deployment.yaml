@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-microservice
+  namespace: twitch
+  labels:
+    app: video-microservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: video-microservice
+  template:
+    metadata:
+      name: video-microservice
+      labels:
+        app: video-microservice
+    spec:
+      containers:
+        - name: video-microservice
+          image: simo3011w/twitch-video-microservice
+          imagePullPolicy: Always
+          env:
+            - name: MONGO_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: mongo_port
+                  name: video-microservice-secret
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: mongo_user
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: mongo_password
+            - name: MONGO_DB
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: mongo_db
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: jwt_secret
+            - name: JWT_INTERNAL
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: jwt_internal
+            - name: CHANNEL_MANAGEMENT_API_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: video-microservice-secret
+                  key: channel_management_api_base_url
+            - name: HOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: video-microservice-secret
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-microservice-service
+  namespace: twitch
+  labels:
+    app: video-microservice-service
+spec:
+  selector:
+    app: video-microservice
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 32001
+  type: NodePort

@@ -3,7 +3,7 @@ spring:
     name: stream-microservice
   data:
     mongodb:
-      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${MONGO_PORT}/${MONGO_DB}?authSource=admin
+      uri: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${HOST}:${MONGO_PORT}/${MONGO_DB}?authSource=admin
 
 nginx:
   rtmp: ${NGINX_RTMP}

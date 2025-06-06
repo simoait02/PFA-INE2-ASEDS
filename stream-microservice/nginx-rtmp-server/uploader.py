@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import requests
 import sys
 import os
@@ -7,16 +5,15 @@ from datetime import timedelta, datetime
 from minio import Minio
 from minio.error import S3Error
 
-# Hardcoded config instead of env variables
 LOG_PATH = "/tmp/uploader.log"
 RECORDINGS_PATH = "/var/recordings"
-MINIO_HOST = "minio:9000"
+MINIO_HOST = "ec2-16-171-153-231.eu-north-1.compute.amazonaws.com:9000"
 MINIO_ACCESS_KEY = "minioadmin"
 MINIO_SECRET_KEY = "minioadmin"
-MINIO_SECURE = False  # Boolean, not string
+MINIO_SECURE = False
 BUCKET_NAME = "videos"
-STREAM_MICROSERVICE_IP = "192.168.1.34"
-VIDEO_MICROSERVICE_IP = "192.168.1.34"
+STREAM_MICROSERVICE_IP = "stream-microservice-service"
+VIDEO_MICROSERVICE_IP = "video-microservice-service"
 STREAMS_MANAGEMENT_PORT = 8085
 VIDEO_MANAGEMENT_PORT = 8081
 PRESIGNED_URL_EXPIRY_DAYS = 1
