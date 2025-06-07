@@ -32,10 +32,6 @@ public class BlogControllerUnit {
     @Autowired
     public MockMvc mockMvc;
     @MockitoBean
-    public BlogRepository blogRepository;
-    @MockitoBean
-    public BlogMapper blogMapper;
-    @MockitoBean
     public BlogService blogService;
     ObjectMapper mapper=new ObjectMapper();
     String resultContent=null;
@@ -52,22 +48,8 @@ public class BlogControllerUnit {
         List<BlogDto> blogDtos = Arrays.asList(
                 b1,b2
         );
-        BlogEntity e1 = new BlogEntity();
-        e1.setTitle(b1.getTitle());
-        e1.setCategory(b1.getCategory());
-        e1.setOwnerid(b1.getOwner_id());
-        BlogEntity e2 = new BlogEntity();
-        e2.setTitle(b2.getTitle());
-        e2.setCategory(b2.getCategory());
-        e2.setOwnerid(b2.getOwner_id());
-        when(blogMapper.toDto(e1)).thenReturn(b1);
-        when(blogMapper.toDto(e2)).thenReturn(b2);
         resultContent = mapper.writeValueAsString(blogDtos);
         System.out.println(resultContent);
-        List<BlogEntity> blogEntities=Arrays.asList(
-                e1,e2
-        );
-        when(blogRepository.findAll()).thenReturn(blogEntities);
         when(blogService.getAllBlogs()).thenReturn(blogDtos);
 
         mockMvc.perform(get("/blogs/")
@@ -81,14 +63,7 @@ public class BlogControllerUnit {
                 .title("t1").content("c1").owner_id(1)
                 .category("ca1")
                 .build();
-        BlogEntity e1 = new BlogEntity();
-        e1.setTitle(b1.getTitle());
-        e1.setCategory(b1.getCategory());
-        e1.setOwnerid(b1.getOwner_id());
-        e1.setId(1);
-        when(blogMapper.toDto(e1)).thenReturn(b1);
         resultContent=mapper.writeValueAsString(b1);
-        when(blogRepository.findById(1)).thenReturn(Optional.of(e1));
         when(blogService.getBlogById(1)).thenReturn(b1);
         mockMvc.perform(get("/blogs/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -101,13 +76,7 @@ public class BlogControllerUnit {
                 .title("t1").content("c1").owner_id(1)
                 .category("ca1")
                 .build();
-        BlogEntity e1 = new BlogEntity();
-        e1.setTitle(b1.getTitle());
-        e1.setCategory(b1.getCategory());
-        e1.setOwnerid(b1.getOwner_id());
-        when(blogMapper.toDto(e1)).thenReturn(b1);
         resultContent=mapper.writeValueAsString(b1);
-        when(blogRepository.save(Mockito.any(BlogEntity.class))).thenReturn(e1);
         when(blogService.createBlog(Mockito.any(BlogDto.class))).thenReturn(b1);
         this.mockMvc.perform(post("/blogs/")
                 .content(resultContent)
@@ -120,14 +89,8 @@ public class BlogControllerUnit {
                 .title("t1").content("c1").owner_id(1)
                 .category("ca1")
                 .build();
-        BlogEntity e1 = new BlogEntity();
-        e1.setTitle(b1.getTitle());
-        e1.setCategory(b1.getCategory());
-        e1.setOwnerid(b1.getOwner_id());
-        when(blogMapper.toDto(e1)).thenReturn(b1);
         resultContent=mapper.writeValueAsString(b1);
-        e1.setId(1);
-        when(blogRepository.findById(Mockito.any(Integer.class))).thenReturn(Optional.of(e1));
+        b1.setId(1);
         when(blogService.updateBlog(Mockito.any(BlogDto.class),Mockito.any(Integer.class))).thenReturn(b1);
         this.mockMvc.perform(patch("/blogs/1")
                         .content(resultContent)

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class UserAuthMicroserviceApplication {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Dotenv dotenv = Dotenv.configure()
                 .directory("userAuth-microservice")
                 .filename(".env")
@@ -18,5 +18,9 @@ public class UserAuthMicroserviceApplication {
         );
 
         SpringApplication.run(UserAuthMicroserviceApplication.class, args);
+    }*/
+    public static void main(String[] args) {
+        SpringApplication.run(UserAuthMicroserviceApplication.class, args);
     }
+
 }

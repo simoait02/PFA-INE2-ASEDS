@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class UserManagementMicroserviceApplication {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Dotenv dotenv = Dotenv.configure()
                 .directory("userManagement-microservice")
                 .filename(".env")
@@ -17,6 +17,10 @@ public class UserManagementMicroserviceApplication {
                 System.setProperty(entry.getKey(), entry.getValue())
         );
         SpringApplication.run(UserManagementMicroserviceApplication.class, args);
+    }*/
+    public static void main(String[] args) {
+        SpringApplication.run(UserManagementMicroserviceApplication.class, args);
     }
+
 
 }

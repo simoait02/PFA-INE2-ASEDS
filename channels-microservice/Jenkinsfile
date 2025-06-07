@@ -1,5 +1,5 @@
 pipeline {
-   agent none
+   agent any
    triggers {
       pollSCM('*/1 * * * *')
    }
@@ -19,11 +19,17 @@ pipeline {
         steps {
            dir('channels-microservice') {
                sh 'gradle build -x test'
-               archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
            }
-
         }
       }
+      stage ('sca ') {
+         steps {
+            dir('channels-microservice') {
+               dependencyCheck additionalArguments: '--format HTML', nvdCredentialsId: 'owasp', odcInstallation: 'DP-Check'
+            }
+         }
+      }
+
       stage('sast') {
          agent {
             docker {

@@ -6,7 +6,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 public class BlogsMicroserviceApplication {
-	private static final boolean IS_TEST = System.getProperty("spring.profiles.active") != null;
+	/*private static final boolean IS_TEST = System.getProperty("spring.profiles.active") != null;
 	static {
 		if (!IS_TEST) {
 			loadEnvFile();
@@ -21,7 +21,7 @@ public class BlogsMicroserviceApplication {
 		dotenv.entries().forEach(entry ->
 				System.setProperty(entry.getKey(), entry.getValue())
 		);
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(BlogsMicroserviceApplication.class, args);

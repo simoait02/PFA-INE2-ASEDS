@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blogs-config
+  namespace: twitch
+data:
+  database: Blogs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-blogs
+  namespace: twitch
+spec:
+  clusterIP: None
+  ports:
+    - port: 5432
+      name: blogs-postgres
+  selector:
+    app: postgres-blogs
+
+
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-blogs
+  namespace: twitch
+spec:
+  serviceName: "postgres-blogs"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-blogs
+  template:
+    metadata:
+      labels:
+        app: postgres-blogs
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: blogs-secret
+                  key: DATASOURCE_USERNAME
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: blogs-secret
+                  key: DATASOURCE_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: blogs-config
+                  key: database
+          volumeMounts:
+            - name: postgres-blogs
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-blogs
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

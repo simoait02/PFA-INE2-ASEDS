@@ -1,5 +1,5 @@
 pipeline {
-   agent none
+   agent any
    triggers {
       pollSCM('*/1 * * * *')
    }
@@ -13,16 +13,22 @@ pipeline {
       stage('build stage') {
         agent{
           docker {
-             image 'gradle:8.14.0-jdk17'
+             image 'gradle:8.14.0-jdk21'
           }
         }
         steps {
            dir('blogs-microservice') {
                sh 'gradle build -x test'
-               archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
            }
 
         }
+      }
+      stage ('sca ') {
+          steps {
+             dir('blogs-microservice') {
+                 dependencyCheck additionalArguments: '--format HTML', nvdCredentialsId: 'owasp', odcInstallation: 'DP-Check'
+             }
+          }
       }
       stage('sast') {
                agent {
