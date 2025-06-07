@@ -1,5 +1,5 @@
 pipeline {
-   agent none
+   agent any
    triggers {
       pollSCM('*/1 * * * *')
    }
@@ -19,10 +19,15 @@ pipeline {
         steps {
            dir('userManagement-microservice') {
                sh 'gradle build -x test'
-               archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
            }
-
         }
+      }
+      stage ('sca ') {
+          steps {
+             dir('userManagement-microservice') {
+                dependencyCheck additionalArguments: '--format HTML', nvdCredentialsId: 'owasp', odcInstallation: 'DP-Check'
+             }
+          }
       }
       stage('package stage') {
         agent {
