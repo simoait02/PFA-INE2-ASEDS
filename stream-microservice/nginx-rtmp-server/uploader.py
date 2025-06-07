@@ -30,22 +30,22 @@ def calculate_duration(start, end):
         duration = int((end_dt - start_dt).total_seconds())
         return max(duration, 0)
     except Exception as e:
-        log(f"⚠️ Error parsing duration: {str(e)}")
+        log(f"Error parsing duration: {str(e)}")
         return 0
 
 def main():
     if len(sys.argv) < 2:
-        log("❌ No filename provided")
+        log("No filename provided")
         return
 
     filename = sys.argv[1]
     file_path = os.path.join(RECORDINGS_PATH, filename)
 
     if not os.path.exists(file_path):
-        log(f"❌ File not found: {file_path}")
+        log(f"File not found: {file_path}")
         return
 
-    log(f"🚀 Starting upload for: {file_path}")
+    log(f"Starting upload for: {file_path}")
 
     minio_client = Minio(
         MINIO_HOST,
@@ -60,25 +60,25 @@ def main():
         response = requests.get(streams_url)
 
         if response.status_code != 200:
-            log(f"❌ Failed to fetch stream metadata: {response.status_code}")
+            log(f"Failed to fetch stream metadata: {response.status_code}")
             return
 
         stream_data = response.json()
 
         if not minio_client.bucket_exists(BUCKET_NAME):
             minio_client.make_bucket(BUCKET_NAME)
-            log(f"📦 Created bucket: {BUCKET_NAME}")
+            log(f"Created bucket: {BUCKET_NAME}")
 
         object_name = f"{stream_data['channelId']}/{filename}"
         minio_client.fput_object(BUCKET_NAME, object_name, file_path)
-        log(f"✅ Uploaded to MinIO: {stream_data['channelId']}")
+        log(f"Uploaded to MinIO: {stream_data['channelId']}")
 
         url = minio_client.presigned_get_object(
             BUCKET_NAME,
             object_name,
             expires=timedelta(days=PRESIGNED_URL_EXPIRY_DAYS)
         )
-        log(f"🎬 Pre-signed URL: {url}")
+        log(f" Pre-signed URL: {url}")
 
         start = stream_data.get("startTime")
         end = stream_data.get("endTime")
@@ -102,14 +102,14 @@ def main():
         post_response = requests.post(backend_url, json=video_payload)
 
         if post_response.status_code == 201:
-            log("📥 Video metadata successfully saved to backend.")
+            log("Video metadata successfully saved to backend.")
         else:
-            log(f"❌ Failed to save video metadata: {post_response.status_code} - {post_response.text}")
+            log(f"Failed to save video metadata: {post_response.status_code} - {post_response.text}")
 
     except S3Error as e:
-        log(f"❌ Upload error: {str(e)}")
+        log(f"Upload error: {str(e)}")
     except Exception as e:
-        log(f"❌ General error: {str(e)}")
+        log(f"General error: {str(e)}")
 
 if __name__ == "__main__":
     main()

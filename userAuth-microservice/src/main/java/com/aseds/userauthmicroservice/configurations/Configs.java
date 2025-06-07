@@ -54,6 +54,7 @@ public class Configs {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailService userDetailService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
