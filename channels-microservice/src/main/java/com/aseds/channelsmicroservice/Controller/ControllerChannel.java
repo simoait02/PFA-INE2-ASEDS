@@ -49,7 +49,7 @@ public class ControllerChannel {
     public ResponseEntity<Boolean> isExistUser(@PathVariable int id){
         return ResponseEntity.ok(service.isChannelExist(id));
     }
-    @GetMapping("/search/{name}")
+    @GetMapping("/searching/{name}")
     public ResponseEntity<List<Channel_dto>> searchChannels(@PathVariable String name){
         return ResponseEntity.ok(this.service.searchChannelsByName(name));
     }

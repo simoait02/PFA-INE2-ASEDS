@@ -10,7 +10,7 @@ pipeline {
 
    }
    stages {
-      stage('build stage') {
+      /*stage('build stage') {
       when {
          changeset "channels-microservice/**"
       }
@@ -76,7 +76,7 @@ pipeline {
         }
         steps{
            dir('channels-microservice') {
-              sh 'docker build -t $DOCKER_REPO/$DOCKER_IMAGE:$DOCKER_TAG .'
+              sh 'docker build -t $DOCKER_REPO/$DOCKER_IMAGE:31 .'
            }
 
         }
@@ -114,7 +114,7 @@ pipeline {
                     sh '''
                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
-                       docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$DOCKER_TAG
+                       docker push $DOCKER_USERNAME/$DOCKER_IMAGE:31
                        '''
                 }
 
@@ -122,10 +122,13 @@ pipeline {
 
          }
 
-      }
+      }*/
       stage ('deployment stage') {
+          when {
+             changeset "channels-microservice/**"
+          }
           steps {
-            dir('channels-microservice') {
+
 
                 withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
 
@@ -137,7 +140,7 @@ pipeline {
                              git pull origin master
 
                              cd k8s
-                             sed -i "s|image: $DOCKER_REPO/$DOCKER_IMAGE:[^ ]*|image: $DOCKER_REPO/$DOCKER_IMAGE:$DOCKER_TAG|g" channels-microservice-deployment.yaml
+                             sed -i "s|image: $DOCKER_REPO/$DOCKER_IMAGE:[^ ]*|image: $DOCKER_REPO/$DOCKER_IMAGE:31|g" channels-microservice-deployment.yaml
                              cat channels-microservice-deployment.yaml
                              git add .
                              git commit -m "update manifest"
@@ -145,7 +148,7 @@ pipeline {
                              git push -u origin master
                              '''
                 }
-            }
+
 
 
           }
