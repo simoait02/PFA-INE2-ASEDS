@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: channels-microservice
-          image: killerquen69/channels:2
+          image: killerquen69/channels:22
           imagePullPolicy: Always
           env:
             - name: SPRING_CONFIG_ADDITIONAL_LOCATION
