@@ -144,7 +144,7 @@ pipeline {
                              cat channels-microservice-deployment.yaml
                              git add .
                              git commit -m "update manifest"
-                             git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Hamzacherkaouiel/PFA-INE2-ASEDS.git
+                             git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/simoait02/PFA-INE2-ASEDS.git
                              git push -u origin master
                              '''
                 }
