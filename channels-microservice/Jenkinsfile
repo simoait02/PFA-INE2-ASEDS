@@ -140,7 +140,7 @@ pipeline {
                              git pull origin master
 
                              cd k8s
-                             sed -i "s|image: $DOCKER_REPO/$DOCKER_IMAGE:[^ ]*|image: $DOCKER_REPO/$DOCKER_IMAGE:31|g" channels-microservice-deployment.yaml
+                             sed -i "s|image: $DOCKER_REPO/$DOCKER_IMAGE:[^ ]*|image: $DOCKER_REPO/$DOCKER_IMAGE:22|g" channels-microservice-deployment.yaml
                              cat channels-microservice-deployment.yaml
                              git add .
                              git commit -m "update manifest"
