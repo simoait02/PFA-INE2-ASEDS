@@ -15,52 +15,26 @@ spec:
       name: video-microservice
       labels:
         app: video-microservice
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "video-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/video"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/video" -}}
+          spring.data.mongodb.uri=mongodb://{{ .Data.data.mongo_user }}:{{ .Data.data.mongo_password }}@{{ .Data.data.host }}:{{ .Data.data.mongo_port }}/{{ .Data.data.mongo_db }}
+          channel.management.api.base-url={{ .Data.data.channel_management_api_base_url }}
+          jwt.secret={{ .Data.data.jwt_secret }}
+          jwt.internal={{ .Data.data.jwt_internal }}
+          {{- end }}
     spec:
       containers:
         - name: video-microservice
           image: simo3011w/twitch-video-microservice
           imagePullPolicy: Always
           env:
-            - name: MONGO_PORT
-              valueFrom:
-                secretKeyRef:
-                  key: mongo_port
-                  name: video-microservice-secret
-            - name: MONGO_USER
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: mongo_user
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: mongo_password
-            - name: MONGO_DB
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: mongo_db
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: jwt_secret
-            - name: JWT_INTERNAL
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: jwt_internal
-            - name: CHANNEL_MANAGEMENT_API_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: channel_management_api_base_url
-            - name: HOST
-              valueFrom:
-                secretKeyRef:
-                  key: host
-                  name: video-microservice-secret
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "/vault/secrets/"
           ports:
             - containerPort: 8081
               protocol: TCP

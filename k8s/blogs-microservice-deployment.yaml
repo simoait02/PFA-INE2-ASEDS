@@ -15,43 +15,32 @@ spec:
       name: blogs-microservice
       labels:
         app: blogs-microservice
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "blogs-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/blogs/config"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/blogs/config" -}}
+          spring.datasource.url=jdbc:postgresql://{{ .Data.data.HOST }}:{{ .Data.data.DATASOURCE_PORT }}/{{ .Data.data.DATASOURCE_NAME }}
+          spring.datasource.username={{ .Data.data.DATASOURCE_USERNAME }}
+          spring.datasource.password={{ .Data.data.DATASOURCE_PASSWORD }}
+          {{- end }}
     spec:
       containers:
         - name: blogs-microservice
           image: killerquen69/blogs:2
           imagePullPolicy: Always
           env:
-            - name: DATASOURCE_PORT
-              valueFrom:
-                secretKeyRef:
-                  key: DATASOURCE_PORT
-                  name: blogs-secret
-            - name: DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: blogs-secret
-                  key: DATASOURCE_USERNAME
-            - name: DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: blogs-secret
-                  key: DATASOURCE_PASSWORD
-            - name: DATASOURCE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: blogs-secret
-                  key: DATASOURCE_NAME
-            - name: HOST
-              valueFrom:
-                secretKeyRef:
-                  key: HOST
-                  name: blogs-secret
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "/vault/secrets/"
           ports:
             - containerPort: 8050
               protocol: TCP
       restartPolicy: Always
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -60,9 +49,9 @@ metadata:
   labels:
     app: blogs-microservice-service
 spec:
+  type: LoadBalancer
   selector:
     app: blogs-microservice
   ports:
     - port: 8050
       targetPort: 8050
-

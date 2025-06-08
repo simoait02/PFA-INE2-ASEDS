@@ -50,6 +50,17 @@ spec:
     metadata:
       labels:
         app: mongo-video
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "video-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/video"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/video" -}}
+          MONGO_INITDB_ROOT_USERNAME={{ .Data.data.mongo_user }}
+          MONGO_INITDB_ROOT_PASSWORD={{ .Data.data.mongo_password }}
+          MONGO_INITDB_DATABASE={{ .Data.data.mongo_db }}
+          {{- end }}
     spec:
       containers:
         - name: mongo
@@ -58,21 +69,12 @@ spec:
             - containerPort: 27017
               name: mongo
           env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: mongo_user
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: video-microservice-secret
-                  key: mongo_password
-            - name: MONGO_INITDB_DATABASE
-              valueFrom:
-                configMapKeyRef:
-                  name: mongo-config
-                  key: database
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              value: "/vault/secrets/application.properties"
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: "/vault/secrets/application.properties"
+            - name: MONGO_INITDB_DATABASE_FILE
+              value: "/vault/secrets/application.properties"
           volumeMounts:
             - name: mongo-data
               mountPath: /data/db

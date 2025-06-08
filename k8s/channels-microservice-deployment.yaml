@@ -15,48 +15,33 @@ spec:
       name: channels-microservice
       labels:
         app: channels-microservice
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "channels-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/channels"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/channels" -}}
+          spring.datasource.url=jdbc:postgresql://{{ .Data.data.HOST }}:{{ .Data.data.DATASOURCE_PORT }}/{{ .Data.data.DATASOURCE_NAME }}
+          spring.datasource.username={{ .Data.data.DATASOURCE_USERNAME }}
+          spring.datasource.password={{ .Data.data.DATASOURCE_PASSWORD }}
+          video.management.api.base-url={{ .Data.data.VIDEO_MANAGEMENT_API_BASE_URL }}
+          {{- end }}
     spec:
       containers:
         - name: channels-microservice
           image: killerquen69/channels:2
           imagePullPolicy: Always
           env:
-            - name: DATASOURCE_PORT
-              valueFrom:
-                secretKeyRef:
-                  key: DATASOURCE_PORT
-                  name: channels-secret
-            - name: DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: channels-secret
-                  key: DATASOURCE_USERNAME
-            - name: DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: channels-secret
-                  key: DATASOURCE_PASSWORD
-            - name: DATASOURCE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: channels-secret
-                  key: DATASOURCE_NAME
-            - name: VIDEO_MANAGEMENT_API_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: channels-secret
-                  key: VIDEO_MANAGEMENT_API_BASE_URL
-            - name: HOST
-              valueFrom:
-                secretKeyRef:
-                  key: HOST
-                  name: channels-secrett
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "/vault/secrets/"
           ports:
             - containerPort: 8444
               protocol: TCP
       restartPolicy: Always
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -65,9 +50,9 @@ metadata:
   labels:
     app: channels-microservice-service
 spec:
+  type: LoadBalancer
   selector:
     app: channels-microservice
   ports:
     - port: 8444
       targetPort: 8444
-

@@ -15,42 +15,24 @@ spec:
       name: stream-microservice
       labels:
         app: stream-microservice
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "stream-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/stream"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/stream" -}}
+          spring.data.mongodb.uri=mongodb://{{ .Data.data.mongo_user }}:{{ .Data.data.mongo_password }}@{{ .Data.data.host }}:{{ .Data.data.mongo_port }}/{{ .Data.data.mongo_db }}
+          nginx.rtmp={{ .Data.data.nginx_rtmp }}
+          {{- end }}
     spec:
       containers:
         - name: stream-microservice
           image: simo3011w/twitch-stream-microservice
           imagePullPolicy: Always
           env:
-            - name: MONGO_PORT
-              valueFrom:
-                secretKeyRef:
-                  key: mongo_port
-                  name: stream-microservice-secret
-            - name: MONGO_USER
-              valueFrom:
-                secretKeyRef:
-                  key: mongo_user
-                  name: stream-microservice-secret
-            - name: MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: mongo_password
-                  name: stream-microservice-secret
-            - name: MONGO_DB
-              valueFrom:
-                secretKeyRef:
-                  key: mongo_db
-                  name: stream-microservice-secret
-            - name: NGINX_RTMP
-              valueFrom:
-                secretKeyRef:
-                  key: nginx_rtmp
-                  name: stream-microservice-secret
-            - name: HOST
-              valueFrom:
-                secretKeyRef:
-                  key: host
-                  name: stream-microservice-secret
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "/vault/secrets/"
           ports:
             - containerPort: 8085
               protocol: TCP
