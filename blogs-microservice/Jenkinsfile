@@ -11,6 +11,9 @@ pipeline {
    }
    stages {
       stage('build stage') {
+        when {
+           changeset "blogs-microservice/**"
+        }
         agent{
           docker {
              image 'gradle:8.14.0-jdk21'
@@ -24,6 +27,9 @@ pipeline {
         }
       }
       stage ('sca ') {
+          when {
+             changeset "blogs-microservice/**"
+          }
           steps {
              dir('blogs-microservice') {
                  dependencyCheck additionalArguments: '--format HTML', nvdCredentialsId: 'owasp', odcInstallation: 'DP-Check'
@@ -31,6 +37,9 @@ pipeline {
           }
       }
       stage('sast') {
+               when {
+                  changeset "blogs-microservice/**"
+               }
                agent {
                   docker {
                      image 'gradle:8.14.0-jdk21'
@@ -55,6 +64,9 @@ pipeline {
                }
       }
       stage('package stage') {
+        when {
+            changeset "blogs-microservice/**"
+        }
         agent {
           docker {
              image 'docker:24.0-cli'
@@ -69,6 +81,9 @@ pipeline {
         }
       }
       stage('scan stage') {
+         when {
+            changeset "blogs-microservice/**"
+         }
          agent {
             docker {
               image 'aquasec/trivy'
@@ -82,7 +97,9 @@ pipeline {
          }
       }
       stage('push stage') {
-
+         when {
+            changeset "blogs-microservice/**"
+         }
          agent {
             docker {
                image 'docker:24.0-cli'

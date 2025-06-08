@@ -11,6 +11,9 @@ pipeline {
    }
    stages {
       stage('build stage') {
+        when {
+           changeset "userAuth-microservice/**"
+        }
         agent{
           docker {
              image 'gradle:8.14.0-jdk17'
@@ -23,6 +26,9 @@ pipeline {
         }
       }
       stage ('sca ') {
+         when {
+            changeset "userAuth-microservice/**"
+         }
          steps {
             dir('userAuth-microservice') {
                dependencyCheck additionalArguments: '--format HTML', nvdCredentialsId: 'owasp', odcInstallation: 'DP-Check'
@@ -30,6 +36,9 @@ pipeline {
          }
       }
       stage('package stage') {
+        when {
+           changeset "userAuth-microservice/**"
+        }
         agent {
           docker {
              image 'docker:24.0-cli'
@@ -44,6 +53,9 @@ pipeline {
         }
       }
       stage('scan stage') {
+         when {
+            changeset "userAuth-microservice/**"
+         }
          agent {
             docker {
               image 'aquasec/trivy'
@@ -57,7 +69,9 @@ pipeline {
          }
       }
       stage('push stage') {
-
+         when {
+            changeset "userAuth-microservice/**"
+         }
          agent {
             docker {
                image 'docker:24.0-cli'
