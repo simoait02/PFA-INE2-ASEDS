@@ -17,3 +17,5 @@ COPY --from=build /app/build/libs/*.jar app.jar
 USER appuser:appgroup
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+##test
