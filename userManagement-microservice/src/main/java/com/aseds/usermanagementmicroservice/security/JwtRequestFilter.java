@@ -1,4 +1,4 @@
-package com.aseds.usermanagementmicroservice.secerity;
+package com.aseds.usermanagementmicroservice.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

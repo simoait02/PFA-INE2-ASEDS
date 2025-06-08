@@ -12,8 +12,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/channels")
 public class ControllerChannel {
-    @Autowired
-    private ServiceChannelManagement service;
+    private final ServiceChannelManagement service;
+
+    public ControllerChannel(ServiceChannelManagement service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     public ResponseEntity<List<Channel_dto>> getAllChannels(){

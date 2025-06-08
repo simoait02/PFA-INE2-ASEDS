@@ -18,5 +18,37 @@ spring:
           uri: ${ROUTES_CHANNEL_URI}
           predicates:
             - Path=/channels/**
+        - id: ${ROUTES_STREAM_MAN_ID}
+          uri: ${ROUTES_STREAM_MAN_URI}
+          predicates:
+            - Path=/streams-management/**
+        - id: ${ROUTES_STREAM_ID}
+          uri: ${ROUTES_STREAM_URI}
+          predicates:
+            - Path=/streams/**
+        - id: ${ROUTES_VIDEO_ID}
+          uri: ${ROUTES_VIDEO_URI}
+          predicates:
+            - Path=/videos/**
+        - id: ${ROUTES_GAME_ID}
+          uri: ${ROUTES_GAME_URI}
+          predicates:
+            - Path=/games/**
+        - id: ${ROUTES_REGISTRATION_ID}
+          uri: ${ROUTES_REGISTRATION_URI}
+          predicates:
+            - Path=/registrations/**
+        - id: ${ROUTES_TOURNAMENT_ID}
+          uri: ${ROUTES_TOURNAMENT_URI}
+          predicates:
+            - Path=/tournaments/**
+        - id: ${ROUTES_BLOGS_ID}
+          uri: ${ROUTES_BLOGS_URI}
+          predicates:
+            - Path=/blogs/**
+
 server:
   port: 8070
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
