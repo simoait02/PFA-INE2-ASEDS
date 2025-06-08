@@ -123,5 +123,33 @@ pipeline {
          }
 
       }
+      stage ('deployment stage') {
+          steps {
+            dir('channels-microservice') {
+
+                withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+
+                          sh '''
+                             git config --global user.email "hamza.elmalki1234@gmail.com"
+                             git config --global user.name "Hamzacherkaouiel"
+                             git config --global pull.rebase false
+                             git checkout master
+                             git pull origin master
+
+                             cd k8s
+                             sed -i "s|image: $DOCKER_REPO/$DOCKER_IMAGE:[^ ]*|image: $DOCKER_REPO/$DOCKER_IMAGE:$DOCKER_TAG|g" channels-microservice-deployment.yaml
+                             cat channels-microservice-deployment.yaml
+                             git add .
+                             git commit -m "update manifest"
+                             git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/Hamzacherkaouiel/PFA-INE2-ASEDS.git
+                             git push -u origin master
+                             '''
+                }
+            }
+
+
+          }
+
+      }
    }
 }
