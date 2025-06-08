@@ -22,7 +22,7 @@ spec:
         vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/video"
         vault.hashicorp.com/agent-inject-template-application.properties: |
           {{- with secret "secret/data/video" -}}
-          spring.data.mongodb.uri=mongodb://{{ .Data.data.mongo_user }}:{{ .Data.data.mongo_password }}@{{ .Data.data.host }}:{{ .Data.data.mongo_port }}/{{ .Data.data.mongo_db }}
+          spring.data.mongodb.uri=mongodb://{{ .Data.data.mongo_user }}:{{ .Data.data.mongo_password }}@{{ .Data.data.host }}:{{ .Data.data.mongo_port }}/{{ .Data.data.mongo_db }}?authSource=admin
           channel.management.api.base-url={{ .Data.data.channel_management_api_base_url }}
           jwt.secret={{ .Data.data.jwt_secret }}
           jwt.internal={{ .Data.data.jwt_internal }}
