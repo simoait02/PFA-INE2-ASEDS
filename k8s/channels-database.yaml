@@ -40,13 +40,25 @@ spec:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "channels-role"
         vault.hashicorp.com/agent-inject-token: "true"
-        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/channels"
-        vault.hashicorp.com/agent-inject-template-application.properties: |
+        vault.hashicorp.com/agent-inject-secret-POSTGRES_USER: "secret/data/channels"
+        vault.hashicorp.com/agent-inject-template-POSTGRES_USER: |
           {{- with secret "secret/data/channels" -}}
-          POSTGRES_USER={{ .Data.data.DATASOURCE_USERNAME }}
-          POSTGRES_PASSWORD={{ .Data.data.DATASOURCE_PASSWORD }}
-          POSTGRES_DB={{ .Data.data.DATASOURCE_NAME }}
+          {{ .Data.data.DATASOURCE_USERNAME }}
           {{- end }}
+        vault.hashicorp.com/agent-inject-secret-POSTGRES_PASSWORD: "secret/data/channels"
+        vault.hashicorp.com/agent-inject-template-POSTGRES_PASSWORD: |
+          {{- with secret "secret/data/channels" -}}
+          {{ .Data.data.DATASOURCE_PASSWORD }}
+          {{- end }}
+        vault.hashicorp.com/agent-inject-secret-POSTGRES_DB: "secret/data/channels"
+        vault.hashicorp.com/agent-inject-template-POSTGRES_DB: |
+          {{- with secret "secret/data/channels" -}}
+          {{ .Data.data.DATASOURCE_NAME }}
+          {{- end }}
+        
+        
+  
+
     spec:
       containers:
         - name: postgres
@@ -56,11 +68,11 @@ spec:
               name: postgres
           env:
             - name: POSTGRES_USER_FILE
-              value: "/vault/secrets/application.properties"
+              value: "/vault/secrets/postgres_user"
             - name: POSTGRES_PASSWORD_FILE
-              value: "/vault/secrets/application.properties"
+              value: "/vault/secrets/postgres_password"
             - name: POSTGRES_DB_FILE
-              value: "/vault/secrets/application.properties"
+              value: "/vault/secrets/postgres_db"
           volumeMounts:
             - name: postgres-channels
               mountPath: /var/lib/postgresql/data
