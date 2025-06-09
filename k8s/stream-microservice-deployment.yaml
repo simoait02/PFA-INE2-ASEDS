@@ -46,10 +46,9 @@ metadata:
   labels:
     app: stream-microservice-service
 spec:
+  type: ClusterIP
   selector:
     app: stream-microservice
   ports:
     - port: 8085
       targetPort: 8085
-      nodePort: 32002
-  type: NodePort

@@ -50,7 +50,7 @@ metadata:
   labels:
     app: tournament-microservice-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: tournament-microservice
   ports:

@@ -50,7 +50,7 @@ metadata:
   labels:
     app: auth-microservice-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: auth-microservice
   ports:

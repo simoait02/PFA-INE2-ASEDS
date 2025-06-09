@@ -50,7 +50,7 @@ metadata:
   labels:
     app: channels-microservice-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: channels-microservice
   ports:

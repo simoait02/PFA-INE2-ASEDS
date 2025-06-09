@@ -51,7 +51,7 @@ metadata:
   labels:
     app: usermanagement-microservice-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: usermanagement-microservice
   ports:
