@@ -22,3 +22,5 @@ RUN chown appuser:appgroup app.jar
 USER appuser
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+##secure image

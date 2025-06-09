@@ -26,7 +26,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    # Rule for domain-based access with enhanced security
     - host: api-gateway.local.com
       http:
         paths:
