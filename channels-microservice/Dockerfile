@@ -1,21 +1,24 @@
+# BUILD STEP
 FROM gradle:8.4-jdk17-alpine AS build
 WORKDIR /app
 
 COPY build.gradle.kts settings.gradle.kts /app/
-
 COPY src /app/src
+
+RUN gradle dependencies --no-daemon
 
 RUN gradle build -x test --no-daemon
 
-FROM openjdk:17-jdk-alpine
+# EXECUTION STEP
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
 COPY --from=build /app/build/libs/*.jar app.jar
 
-USER appuser:appgroup
+RUN chown appuser:appgroup app.jar
+
+USER appuser
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
-##test
