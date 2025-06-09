@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tournament-microservice
+  namespace: twitch
+  labels:
+    app: tournament-microservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tournament-microservice
+  template:
+    metadata:
+      name: tournament-microservice
+      labels:
+        app: tournament-microservice
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "tournament-role"
+        vault.hashicorp.com/agent-inject-token: "true"
+        vault.hashicorp.com/agent-inject-secret-application.properties: "secret/data/tournament"
+        vault.hashicorp.com/agent-inject-template-application.properties: |
+          {{- with secret "secret/data/tournament" -}}
+          spring.datasource.url=jdbc:postgresql://{{ .Data.data.HOST }}:{{ .Data.data.DATASOURCE_PORT }}/{{ .Data.data.DATASOURCE_NAME }}
+          spring.datasource.username={{ .Data.data.DATASOURCE_USERNAME }}
+          spring.datasource.password={{ .Data.data.DATASOURCE_PASSWORD }}
+          jwt.secret={{ .Data.data.JWT_SECRET }}
+          {{- end }}
+    spec:
+      containers:
+        - name: tournament-microservice
+          image: killerquen69/tournament:1
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "/vault/secrets/"
+          ports:
+            - containerPort: 8082
+              protocol: TCP
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tournament-microservice-service
+  namespace: twitch
+  labels:
+    app: tournament-microservice-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: tournament-microservice
+  ports:
+    - port: 8082
+      targetPort: 8082
